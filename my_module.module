@@ -6,7 +6,7 @@
 function my_module_init() {
   if ((arg(0) == 'node') && is_numeric(arg(1)) && arg(2) == '') {   // ie. node/(some node id)
     // this DOESN'T include paths like: node/3/edit  node/3/register  node/3/print node/3/track node/3/revisions
-	
+
     drupal_add_css(drupal_get_path('module', 'my_module') . '/css/my_module.css');
     // result of drupal_get_path is: sites/all/modules/my_module/css/my_module.css
     
@@ -17,6 +17,7 @@ function my_module_init() {
     drupal_set_message('You clicked on a page', 'warning', FALSE);
   }
 }
+
 /**
  * Implementation of hook_node_insert().
  */
@@ -27,6 +28,7 @@ function my_module_node_presave($nodeid) {
     drupal_set_message('<pre>' . print_r($nodeid, TRUE) . '</pre>', 'warning', FALSE);
   }
 }
+
 /**
  *  My function that does stuff.
  */
@@ -36,3 +38,24 @@ function my_module_doing_stuff($nodeid) {
   drupal_set_message($nodeid);
 }
 
+function my_module_menu() {
+  $items = array();
+  // A menu item that just points to the status report
+  $items['admin/reports/status'] = array(
+    'title' => 'My Status Report',
+    'description' => 'View the stupid status report.',
+    'page callback' => 'system_status',
+    'weight' => -60,
+    'menu_name' => 'main-menu',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => 'modules/system',
+    'type' => MENU_NORMAL_ITEM,
+  );
+    return $items;
+}
+
+function my_module_cron() {
+  watchdog('error', 'Cron has run and so did my custom module.')
+
+}
