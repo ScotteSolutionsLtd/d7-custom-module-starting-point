@@ -4,21 +4,28 @@
  * Implementation of hook_init().
  */
 function my_module_init() {
-  if (arg(0) == 'cart') {   // ie. cart only
-	  drupal_add_css(drupal_get_path('module', 'my_module') .'/css/my_module.css');
+  if ((arg(0) == 'node') && is_numeric(arg(1)) && arg(2) == '') {   // ie. node/(some node id)
+    // this DOESN'T include paths like: node/3/edit  node/3/register  node/3/print node/3/track node/3/revisions
+	
+    drupal_add_css(drupal_get_path('module', 'my_module') . '/css/my_module.css');
+    // result of drupal_get_path is: sites/all/modules/my_module/css/my_module.css
+    
+    $nodeid = node_load(arg(1));
+    drupal_set_message('<pre>' . print_r($nodeid, TRUE) . '</pre>', 'warning', FALSE);
+
   } else {
-    drupal_set_message('You clicked on a page');
+    drupal_set_message('You clicked on a page', 'warning', FALSE);
   }
 }
 /**
  * Implementation of hook_node_insert().
  */
-function my_module_node_insert($nodeid) {
-	if ($nodeid->type == 'article') {
-	  $nodeid->status = 0;
-	  $nodeid->sticky = 1;
-	  drupal_set_message('<pre>' . print_r($nodeid, TRUE) . '</pre>');
-	}
+function my_module_node_presave($nodeid) {
+  if ($nodeid->type == 'article') {
+    $nodeid->status = 0;
+    $nodeid->sticky = 1;
+    drupal_set_message('<pre>' . print_r($nodeid, TRUE) . '</pre>', 'warning', FALSE);
+  }
 }
 /**
  *  My function that does stuff.
