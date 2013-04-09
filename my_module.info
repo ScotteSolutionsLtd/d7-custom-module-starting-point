@@ -1,0 +1,7 @@
+name = My Example Module
+description = An example module to do a couple things.
+core = 7.x
+package = Custom
+dependencies[] = token
+dependencies[] = devel
+;configure = admin/config/content/example
